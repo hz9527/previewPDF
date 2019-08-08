@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <title></title>
+    <script>
+      window.CDN_PATH = 'http://localhost:9090/';
+      (function (cdnPath, assets) {
+        function loadEl(el, callback) {
+          el.onload = function() {
+            callback();
+            el.onload = null;
+          }
+        }
+        function injectCss(el, list, callback) {
+          var fragment = document.createDocumentFragment();
+          function handler(i) {
+            if (i === list.length - 1 && callback) {
+              callback();
+            }
+          }
+          for (var i = 0, l = list.length; i < l; i++) {
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = cdnPath + list[i];
+            fragment.appendChild(link);
+            loadEl(link, (function (ind) {
+              return function() {
+                handler(ind);
+              }
+            })(i))
+          }
+          el.appendChild(fragment);
+        }
+        function injectScript(el, list) {
+          var tasks = [];
+          for (var i = 0, l = list.length; i < l; i++) {
+            var script = document.createElement('script');
+            script.src = cdnPath + list[i];
+            tasks.push((function(script) {
+              return function() {
+                el.appendChild(script);
+                var task = tasks.shift();
+                task && loadEl(script, task);
+              }
+            })(script))
+          }
+          var task = tasks.shift();
+          task && task();
+        }
+        var head = document.querySelector('head');
+        injectCss(head, assets.header.css, function() {
+          document.querySelector('body').style.display = 'block';
+        });
+        injectScript(head, assets.header.js);
+        window.addEventListener('load', function() {
+          injectScript(document.querySelector('body'), assets.footer.js);
+        })
+      })(
+        window.CDN_PATH,
+        {
+          header: {
+            js: ['static/js/pdfjs-dist/build/pdf.js', 'static/js/pdfjs-dist/web/pdf_viewer.js'],
+            css: ['static/css/pdf_viewer.css', 'static/css/viewer.css'],
+          },
+          footer: {
+            js: ['static/js/viewer.js', 'static/js/index.js'],
+            css: []
+          }
+        }
+      )
+    </script>
+  </head>
+
+  <body style="display: none">
+    <header>
+      <h1 id="title"></h1>
+    </header>
+
+    <div id="viewerContainer">
+      <div id="viewer" class="pdfViewer"></div>
+    </div>
+
+    <div id="loadingBar">
+      <div class="progress"></div>
+      <div class="glimmer"></div>
+    </div>
+
+    <div id="errorWrapper" hidden="true">
+      <div id="errorMessageLeft">
+        <span id="errorMessage"></span>
+        <button id="errorShowMore">
+          More Information
+        </button>
+        <button id="errorShowLess">
+          Less Information
+        </button>
+      </div>
+      <div id="errorMessageRight">
+        <button id="errorClose">
+          Close
+        </button>
+      </div>
+      <div class="clearBoth"></div>
+      <textarea id="errorMoreInfo" hidden="true" readonly="readonly"></textarea>
+    </div>
+
+    <footer>
+      <button class="toolbarButton pageUp" title="Previous Page" id="previous"></button>
+      <button class="toolbarButton pageDown" title="Next Page" id="next"></button>
+
+      <input type="number" id="pageNumber" class="toolbarField pageNumber" value="1" size="4" min="1">
+
+      <button class="toolbarButton zoomOut" title="Zoom Out" id="zoomOut"></button>
+      <button class="toolbarButton zoomIn" title="Zoom In" id="zoomIn"></button>
+    </footer>
+  </body>
+</html>

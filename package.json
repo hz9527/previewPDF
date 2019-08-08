@@ -1,0 +1,23 @@
+{
+  "name": "previewPDF",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hz9527/previewPDF.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hz9527/previewPDF/issues"
+  },
+  "homepage": "https://github.com/hz9527/previewPDF#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
