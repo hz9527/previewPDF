@@ -38,3 +38,5 @@ css()
 js()
 assets()
 
+process.on('uncaughtException', console.log)
+

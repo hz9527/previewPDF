@@ -185,15 +185,15 @@ canvas {
   }
 }
 
-#loadingBar {
+/* #loadingBar {
   position: relative;
   height: .6rem;
   background-color: #333;
   border-bottom: 1px solid #333;
   margin-top: 5rem;
-}
+} */
 
-#loadingBar .progress {
+/* #loadingBar .progress {
   position: absolute;
   left: 0;
   width: 0;
@@ -226,6 +226,27 @@ canvas {
   background-repeat: no-repeat;
 
   animation: progressIndeterminate 2s linear infinite;
+} */
+
+#loadingBar {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#loadingBar .loading {
+  width: 30px;
+  height: 30px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 3px solid #999;
+  border-left-color: transparent;
+  animation: Loading infinite linear 0.5s;
+}
+@keyframes Loading {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg); }
+  100% { transform: rotate(360deg); }
 }
 
 #errorWrapper {

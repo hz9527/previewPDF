@@ -1,8 +1,13 @@
 
 'use strict';
+window.URL_SEARCH = location.search.slice(1).split('&').reduce(function (data, item) {
+  var arr = item.split('=');
+  data[arr[0]] = arr[1];
+  return data;
+}, {});
 
 window.PDFViewerApplication = (function () {
-  var USE_ONLY_CSS_ZOOM = true;
+  var USE_ONLY_CSS_ZOOM = false;
   var TEXT_LAYER_MODE = 0; // DISABLE
   var MAX_IMAGE_SIZE = 1024 * 1024;
   var CMAP_URL = window.CDN_PATH + 'static/js/pdfjs-dist/cmaps/';
@@ -168,8 +173,9 @@ window.PDFViewerApplication = (function () {
     },
 
     setTitle: function pdfViewSetTitle(title) {
-      document.title = title;
-      document.getElementById('title').textContent = title;
+      var name = URL_SEARCH.name || title;
+      document.title = name;
+      document.getElementById('title').textContent = name;
     },
 
     error: function pdfViewError(message, moreInfo) {
@@ -234,11 +240,11 @@ window.PDFViewerApplication = (function () {
     },
 
     progress: function pdfViewProgress(level) {
-      var percent = Math.round(level * 100);
-      // Updating the bar if value increases.
-      if (percent > this.loadingBar.percent || isNaN(percent)) {
-        this.loadingBar.percent = percent;
-      }
+      // var percent = Math.round(level * 100);
+      // // Updating the bar if value increases.
+      // if (percent > this.loadingBar.percent || isNaN(percent)) {
+      //   this.loadingBar.percent = percent;
+      // }
     },
 
     get pagesCount() {
@@ -343,9 +349,9 @@ window.PDFViewerApplication = (function () {
     },
   };
 
-  document.addEventListener('DOMContentLoaded', function () {
+  // document.addEventListener('DOMContentLoaded', function () {
     
-  }, true);
+  // }, true);
   PDFViewerApplication.initUI();
 
   (function animationStartedClosure() {
